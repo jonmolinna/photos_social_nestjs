@@ -8,6 +8,10 @@ import { CreatePostDto } from './dtos/create-post.dto';
 export class PostsService {
   constructor(@InjectModel(Posts.name) private postModel: Model<Posts>) {}
 
+  async findOnePostById(id: string): Promise<Posts> {
+    return this.postModel.findOne({ _id: id });
+  }
+
   async addPost(createPostDto: CreatePostDto): Promise<Posts> {
     return this.postModel.create(createPostDto);
   }
@@ -20,8 +24,25 @@ export class PostsService {
   }
 
   async getAllPostsUserById(id: string): Promise<Posts[]> {
-    const res = await this.postModel.findById(id);
-    console.log('YOOO', res);
-    return await this.postModel.find({ _id: id });
+    return await this.postModel
+      .find({ user: id })
+      .populate('user', '-password')
+      .sort({ createdAt: -1 });
+  }
+
+  async likePost(idPost: string, idUser) {
+    const post = await this.postModel.findById(idPost);
+    if (post) {
+      // No Like
+      if (post.likes.find((like) => like.user.toString() === idUser)) {
+        post.likes = post.likes.filter(
+          (like) => like.user.toString() !== idUser,
+        );
+      } else {
+        post.likes.push({ user: idUser });
+      }
+      post.save();
+      return post;
+    }
   }
 }
