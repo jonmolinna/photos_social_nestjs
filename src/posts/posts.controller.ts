@@ -18,6 +18,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from 'src/cloudinary/cloudinary.service';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { ParseObjectIdPipe } from 'src/utilities/parse-object-id-pipe.pipe';
+import { CreateCommentDto } from './dtos/create-comment.dto';
 
 @Controller('posts')
 export class PostsController {
@@ -68,5 +69,19 @@ export class PostsController {
   @Post('post_like/:id')
   async addLike(@Param('id', ParseObjectIdPipe) id: string, @Request() req) {
     return this.postsService.likePost(id, req.user.sub);
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('post_comment/:id')
+  async addCommentPost(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Request() req,
+    @Body() createCommentDto: CreateCommentDto,
+  ) {
+    return this.postsService.addComment(
+      id,
+      req.user.sub,
+      createCommentDto.comment,
+    );
   }
 }

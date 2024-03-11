@@ -20,6 +20,8 @@ export class PostsService {
     return await this.postModel
       .find()
       .populate('user', '-password')
+      .populate({ path: 'comments.user', select: '-password' })
+      .populate({ path: 'likes.user', select: '-password' })
       .sort({ createdAt: -1 });
   }
 
@@ -27,6 +29,8 @@ export class PostsService {
     return await this.postModel
       .find({ user: id })
       .populate('user', '-password')
+      .populate({ path: 'comments.user', select: '-password' })
+      .populate({ path: 'likes.user', select: '-password' })
       .sort({ createdAt: -1 });
   }
 
@@ -41,6 +45,19 @@ export class PostsService {
       } else {
         post.likes.push({ user: idUser });
       }
+      post.save();
+      return post;
+    }
+  }
+
+  async addComment(idPost: string, idUser, comment: string) {
+    const post = await this.postModel.findById(idPost);
+    if (post) {
+      post.comments.unshift({
+        comment: comment,
+        user: idUser,
+        createdAt: Date.now(),
+      });
       post.save();
       return post;
     }
