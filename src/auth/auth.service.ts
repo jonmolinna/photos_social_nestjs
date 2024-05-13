@@ -29,4 +29,10 @@ export class AuthService {
 
     throw new UnauthorizedException();
   }
+
+  async profileUser(id) {
+    const user = await this.usersService.findOneUserById(id);
+    const data = { _id: user._id, email: user.email, name: user.name };
+    return data;
+  }
 }

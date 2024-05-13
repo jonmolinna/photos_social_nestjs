@@ -10,7 +10,7 @@ export class UsersController {
   async createUser(@Res() res, @Body() createUserDto: CreateUserDto) {
     await this.userService.addUser(createUserDto);
     return res.status(HttpStatus.CREATED).json({
-      message: 'User add succesfully',
+      message: 'Usuario creado exitosamente',
     });
   }
 }

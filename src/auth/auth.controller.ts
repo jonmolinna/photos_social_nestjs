@@ -24,7 +24,9 @@ export class AuthController {
 
   @UseGuards(AuthGuard)
   @Get('profile')
-  getProfile(@Request() req) {
-    return { msg: 'Profile', status: 'Ruta privada' };
+  async getProfile(@Request() req) {
+    const id = req.user.sub;
+    const user = await this.authService.profileUser(id);
+    return user;
   }
 }
