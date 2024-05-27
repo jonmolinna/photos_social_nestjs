@@ -45,8 +45,12 @@ export class PostsService {
       } else {
         post.likes.push({ user: idUser });
       }
-      post.save();
-      return post;
+      await post
+        .save()
+        .then((post) =>
+          post.populate({ path: 'likes.user', select: '-password' }),
+        );
+      return post.likes;
     }
   }
 
@@ -59,7 +63,7 @@ export class PostsService {
         createdAt: Date.now(),
       });
       post.save();
-      return post;
+      return post.likes;
     }
   }
 }
