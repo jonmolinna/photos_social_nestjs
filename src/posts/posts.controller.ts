@@ -72,6 +72,15 @@ export class PostsController {
   }
 
   @UseGuards(AuthGuard)
+  @Post('post_bookmark/:id')
+  async addBookmark(
+    @Param('id', ParseObjectIdPipe) id: string,
+    @Request() req,
+  ) {
+    return this.postsService.bookmark(id, req.user.sub);
+  }
+
+  @UseGuards(AuthGuard)
   @Post('post_comment/:id')
   async addCommentPost(
     @Param('id', ParseObjectIdPipe) id: string,
