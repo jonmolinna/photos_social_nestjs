@@ -11,6 +11,7 @@ import {
   FileTypeValidator,
   Get,
   Param,
+  Put,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dtos/create-post.dto';
@@ -92,5 +93,15 @@ export class PostsController {
       req.user.sub,
       createCommentDto.comment,
     );
+  }
+
+  @UseGuards(AuthGuard)
+  @Put('post_comment/:idPost/:idComment')
+  async deleteCommentPost(
+    @Param('idPost', ParseObjectIdPipe) idPost: string,
+    @Param('idComment', ParseObjectIdPipe) idComment: string,
+    @Request() req,
+  ) {
+    return this.postsService.deleteComment(idPost, req.user.sub, idComment);
   }
 }

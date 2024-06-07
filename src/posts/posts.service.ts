@@ -85,8 +85,32 @@ export class PostsService {
         user: idUser,
         createdAt: Date.now(),
       });
-      post.save();
-      return post.likes;
+      await post
+        .save()
+        .then((post) =>
+          post.populate({ path: 'comments.user', select: '-password' }),
+        );
+      return post.comments[0];
     }
+  }
+
+  async deleteComment(idPost: string, idUser: string, idComment: string) {
+    const post = await this.postModel.findByIdAndUpdate(
+      { _id: idPost },
+      {
+        $pull: {
+          // comments: { _id: idComment },
+          comments: { _id: idComment, user: { _id: idUser } },
+        },
+      },
+      { new: true },
+    );
+    await post
+      .save()
+      .then((post) =>
+        post.populate({ path: 'comments.user', select: '-password' }),
+      );
+
+    return post.comments;
   }
 }
