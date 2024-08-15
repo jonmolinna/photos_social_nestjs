@@ -60,10 +60,16 @@ export class PostsController {
     return this.postsService.getAllPosts();
   }
 
+  // @UseGuards(AuthGuard)
+  // @Get('posts_user')
+  // async getAllPostsUserById(@Request() req) {
+  //   return this.postsService.getAllPostsUserById(req.user.sub);
+  // }
+
   @UseGuards(AuthGuard)
-  @Get('posts_user')
-  async getAllPostsUserById(@Request() req) {
-    return this.postsService.getAllPostsUserById(req.user.sub);
+  @Get('post_user/:id')
+  async getAllPostsUserById(@Param('id', ParseObjectIdPipe) id: string) {
+    return this.postsService.getAllPostsUserById(id);
   }
 
   @UseGuards(AuthGuard)

@@ -10,7 +10,10 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
 
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb://localhost:27017/photos_nestjs'),
+    // MongooseModule.forRoot('mongodb://localhost:27017/photos_nestjs'),
+    MongooseModule.forRoot(
+      'mongodb+srv://jmolina2624:He5NVawhtImy0bnQ@cluster0.wy7i14p.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0',
+    ),
     UsersModule,
     AuthModule,
     PostsModule,
@@ -20,3 +23,6 @@ import { CloudinaryModule } from './cloudinary/cloudinary.module';
   providers: [AppService, IsUserAlreadyExist],
 })
 export class AppModule {}
+
+//jmolina2624
+// He5NVawhtImy0bnQ

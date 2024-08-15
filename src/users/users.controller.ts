@@ -1,6 +1,16 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Post,
+  Res,
+  UseGuards,
+} from '@nestjs/common';
 import { UsersService } from './users.service';
 import { CreateUserDto } from './dtos/CreateUser.dto';
+import { AuthGuard } from 'src/auth/auth.guard';
 
 @Controller('users')
 export class UsersController {
@@ -12,5 +22,22 @@ export class UsersController {
     return res.status(HttpStatus.CREATED).json({
       message: 'Usuario creado exitosamente',
     });
+  }
+
+  @UseGuards(AuthGuard)
+  @Get('/:email')
+  async getFindUserByEmail(@Param('email') email: string, @Res() response) {
+    const user = await this.userService.findOneUserByEmail(email);
+    if (user) {
+      return response.status(200).json({
+        email: user.email,
+        name: user.name,
+        _id: user._id,
+      });
+    } else {
+      return response.status(404).json({
+        message: 'No existe el usuario',
+      });
+    }
   }
 }
