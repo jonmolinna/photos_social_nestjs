@@ -6,6 +6,9 @@ import mongoose from 'mongoose';
 export class Likes {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
+
+  @Prop()
+  createdAt: number;
 }
 
 export const LikesSchema = SchemaFactory.createForClass(Likes);

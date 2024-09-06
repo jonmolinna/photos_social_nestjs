@@ -6,6 +6,9 @@ import { User } from './users.schema';
 export class Bookmark {
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'User' })
   user: User;
+
+  @Prop()
+  createdAt: number;
 }
 
 export const BookmarkSchema = SchemaFactory.createForClass(Bookmark);

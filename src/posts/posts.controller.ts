@@ -28,6 +28,7 @@ export class PostsController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  // Add a Post
   @UseGuards(AuthGuard)
   @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
@@ -54,6 +55,7 @@ export class PostsController {
     });
   }
 
+  // Get All Posts
   @UseGuards(AuthGuard)
   @Get('posts')
   async getAllPosts() {
@@ -66,18 +68,34 @@ export class PostsController {
   //   return this.postsService.getAllPostsUserById(req.user.sub);
   // }
 
+  // Get Posts by User Id
   @UseGuards(AuthGuard)
   @Get('post_user/:id')
   async getAllPostsUserById(@Param('id', ParseObjectIdPipe) id: string) {
     return this.postsService.getAllPostsUserById(id);
   }
 
+  // Get Posts Likes by User Id
+  @UseGuards(AuthGuard)
+  @Get('posts_user_likes/:id')
+  async getAllPostsLikesUserById(@Param('id', ParseObjectIdPipe) id: string) {
+    return this.postsService.getAllPostsLikesUserById(id);
+  }
+
+  // Like o Deslike a Post
   @UseGuards(AuthGuard)
   @Post('post_like/:id')
   async addLike(@Param('id', ParseObjectIdPipe) id: string, @Request() req) {
     return this.postsService.likePost(id, req.user.sub);
   }
 
+  @UseGuards(AuthGuard)
+  @Get('posts_user_bookMark/:id')
+  async getAllPostsBooksUserById(@Param('id', ParseObjectIdPipe) id: string) {
+    return this.postsService.getAllPostsBooksUserById(id);
+  }
+
+  // Saved BookMark a Post by Id
   @UseGuards(AuthGuard)
   @Post('post_bookmark/:id')
   async addBookmark(
