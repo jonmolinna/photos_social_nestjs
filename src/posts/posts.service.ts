@@ -10,7 +10,13 @@ export class PostsService {
 
   // Find a Post By Id
   async findOnePostById(id: string): Promise<Posts> {
-    return this.postModel.findOne({ _id: id });
+    const response = await this.postModel
+      .findOne({ _id: id })
+      .populate('user', '-password')
+      .populate({ path: 'comments.user', select: '-password' })
+      .populate({ path: 'likes.user', select: '-password' })
+      .populate({ path: 'bookmark.user', select: '-password' });
+    return response;
   }
 
   // Add a Post

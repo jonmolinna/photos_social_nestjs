@@ -28,6 +28,13 @@ export class PostsController {
     private readonly cloudinaryService: CloudinaryService,
   ) {}
 
+  // Get one Post by Id
+  @UseGuards(AuthGuard)
+  @Get('post/:id')
+  async findOnePostById(@Param('id', ParseObjectIdPipe) id: string) {
+    return this.postsService.findOnePostById(id);
+  }
+
   // Add a Post
   @UseGuards(AuthGuard)
   @Post('upload')
